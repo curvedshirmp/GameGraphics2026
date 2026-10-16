@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public string playerName = "Player";
+    public string nextSceneName = "Stage2";
+    public TMP_Text livesText;
     public int hp = 100;
     public int lives = 3;
     public float moveSpeed = 5f;
     public float jumpPower = 8f;
     public float fallLimit = -10f;
+    private float facing = 1f;
     public Vector3 startPosition;
     public Transform visual;
     public Vector2 airScale = new Vector2(0.8f, 1.2f);
@@ -15,11 +20,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded = false;
     private bool isGameOver = false;
-    private float facing = 1f;
+    public GameObject gameOverPainel;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         transform.position = startPosition;
+        livesText.text = "LIFE " + lives;
         Debug.Log(playerName + " 시작. 목숨 " + lives);
     }
     void OnMove(InputValue value)
@@ -46,15 +53,7 @@ public class PlayerController : MonoBehaviour
         }
         if (transform.position.y < fallLimit)
         {
-            lives -= 1;
-            transform.position = startPosition;
-            rb.linearVelocity = Vector2.zero;
-            Debug.Log("낙사. 남은 목숨 " + lives);
-            if (lives <= 0)
-            {
-                isGameOver = true;
-                Debug.Log("게임 오버");
-            }
+            LoseLife();
         }
         if (isGrounded)
         { visual.localScale = new Vector3(facing, 1f, 1f); }
@@ -66,12 +65,46 @@ public class PlayerController : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        { isGrounded = true; }
+        {
+            isGrounded = true;
+            Debug.Log("착지");
+        }
     }
-    void OnCollisionExit2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        { isGrounded = false; }
+        if (collision.CompareTag("Goal"))
+        {
+            SceneManager.LoadScene(nextSceneName);
+        }
+        if (collision.CompareTag("Trap"))
+        {
+            //
+            LoseLife();
+        }
     }
+
+
+    void OnCollisionExit2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+            Debug.Log("공중");
+        }
+    }
+
+void LoseLife()
+{
+    lives -= 1;
+    transform.position = startPosition;
+    rb.linearVelocity = Vector2.zero;
+        livesText.text = "LIFE " + lives;
+        Debug.Log("낙사. 남은 목숨 " + lives);
+    if (lives <= 0)
+    {
+        isGameOver = true;
+        gameOverPainel.SetActive(true);
+    }
+ }
 }

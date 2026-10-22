@@ -687,11 +687,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: a3bdb58a-8dd8-42c8-bb31-bc250233b82c
+  cloudProjectId: 9b375407-ee6c-41eb-ba1b-c942612e19b3
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: unity_hell
-  organizationId: 028b390c-b5a4-498d-0000-0d404b8d10d0
+  projectName: Game_MidTermExam
+  organizationId: sofiayeranescola
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
